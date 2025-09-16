@@ -17,7 +17,7 @@ const FilterIcon = () => (
 );
 
 const SearchIcon = () => (
-    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
     </svg>
 );
@@ -69,6 +69,33 @@ const SendIcon = () => (
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
 );
 
+const NewArticleIcon = () => (
+    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+        <polyline points="14 2 14 8 20 8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></polyline>
+        <line x1="12" y1="18" x2="12" y2="12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></line>
+        <line x1="9" y1="15" x2="15" y2="15" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></line>
+    </svg>
+);
+
+const SortIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+    </svg>
+);
+
+const UpvoteIcon = () => (
+    <svg className="w-3 h-3 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 4L3 15h18L12 4z" />
+    </svg>
+);
+
+const WrenchScrewdriverIcon = () => (
+    <svg className="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.472-2.472a3.375 3.375 0 00-4.773-4.773L6.75 11.42m5.877 5.877l-5.877-5.877m0 0a3.375 3.375 0 01-4.773-4.773l2.472-2.472" />
+    </svg>
+);
+
 
 // --- Mock Data ---
 
@@ -80,9 +107,9 @@ const papersData = [
 ];
 
 const filtersData = [
-    { title: '论文来源', options: ['Acl2025', 'Arxiv', 'Cvpr2025', 'Hf'] },
-    { title: 'AI 标签', options: ['AI-Infrastructure', 'Agent', 'Bench', 'Image-Generation', 'Multimodal', 'Reinforcement-Learning', 'Robot', 'Video-Generation', 'Other'] },
-    { title: 'AI 解读', options: ['Reinforcement-Learning', 'Robot', 'Video-Generation', 'Other'] },
+    { title: '论文来源', options: ['Acl2025', 'Arxiv', 'Cvpr2025', 'Hf'], type: 'radio' },
+    { title: 'AI 标签', options: ['AI-Infrastructure', 'Agent', 'Bench', 'Image-Generation', 'Multimodal', 'Reinforcement-Learning', 'Robot', 'Video-Generation', 'Other'], type: 'checkbox' },
+    { title: 'AI 解读', options: ['Reinforcement-Learning', 'Robot', 'Video-Generation', 'Other'], type: 'checkbox' },
 ];
 
 const suggestedQuestions = [
@@ -108,6 +135,13 @@ const mockKeywordsData = {
   4: [ { text: 'Parallel Thinking', color: 'orange' }, { text: 'RL', color: 'blue' }, { text: 'Reasoning', color: 'purple' } ],
 };
 
+// Combine papers with their keywords for easier filtering
+const papersWithKeywords = papersData.map(paper => ({
+    ...paper,
+    keywords: mockKeywordsData[paper.id] || [],
+}));
+
+
 const fetchKeywords = (paperId) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -120,10 +154,23 @@ const fetchKeywords = (paperId) => {
   });
 };
 
+const communityCategories = [
+    '所有文章', '分析和解读', '社区动态', '教程', '开源协作', '合作伙伴', '科研相关', 'NLP', 'Audio', 'CV', 'RL', 'AI 伦理', '扩散模型'
+];
+
+const communityArticlesData = [
+    { id: 1, title: 'PP-OCRV5 on Hugging Face: A Specialized Approach to OCR', author: 'baidu and 5 others', time: '6 days ago', upvotes: 91 },
+    { id: 2, title: 'How to Choose the Best Open Source LLM for Your Project in 2025', author: 'dvilasuero', time: '7 days ago', upvotes: 60 },
+    { id: 3, title: 'Introducing the Palmyra-mini family: powerful, lightweight, and ready to reason!', author: 'Writer and 1 other', time: '5 days ago', upvotes: 42 },
+    { id: 4, title: 'Code a simple RAG from scratch', author: 'ngpson', time: 'Oct 29, 2024', upvotes: 193 },
+    { id: 5, title: 'mem-agent: Persistent, Human Readable Memory Agent Trained with Online RL', author: 'driaforall and 1 other', time: '5 days ago', upvotes: 9 },
+    { id: 6, title: 'KV Caching Explained: Optimizing Transformer Inference Efficiency', author: 'not-lain', time: 'Jan 30', upvotes: 135 },
+];
+
 
 // --- UI Components ---
 
-const Header = () => (
+const Header = ({ currentPage, onNavigate }) => (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <nav className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-16">
             <div className="flex items-center space-x-3">
@@ -134,17 +181,18 @@ const Header = () => (
                 </div>
             </div>
             <div className="flex items-center space-x-8 ml-10">
-                <button className="text-lg font-semibold text-brand-blue transition">AI深度研究</button>
-                <button className="text-lg font-semibold text-gray-600 hover:text-brand-blue transition">智能搜索</button>
-                <button className="text-lg font-semibold text-gray-600 hover:text-brand-blue transition">AI知识图谱</button>
-                <button className="text-lg font-semibold text-gray-600 hover:text-brand-blue transition">论文AI博客</button>
-                <button className="text-lg font-semibold text-gray-600 hover:text-brand-blue transition">AI研讨社区</button>
+                 <button onClick={() => onNavigate('home')} className={`text-lg font-semibold ${currentPage === 'home' ? 'text-brand-blue' : 'text-gray-600 hover:text-brand-blue'} transition`}>首页</button>
+                 <button onClick={() => onNavigate('research')} className={`text-lg font-semibold ${currentPage === 'research' ? 'text-brand-blue' : 'text-gray-600 hover:text-brand-blue'} transition`}>AI深度研究</button>
+                <button onClick={() => onNavigate('search')} className={`text-lg font-semibold ${currentPage === 'search' ? 'text-brand-blue' : 'text-gray-600 hover:text-brand-blue'} transition`}>智能搜索</button>
+                <button onClick={() => onNavigate('knowledge-graph')} className={`text-lg font-semibold ${currentPage === 'knowledge-graph' ? 'text-brand-blue' : 'text-gray-600 hover:text-brand-blue'} transition`}>AI知识图谱</button>
+                <button onClick={() => onNavigate('blog')} className={`text-lg font-semibold ${currentPage === 'blog' ? 'text-brand-blue' : 'text-gray-600 hover:text-brand-blue'} transition`}>论文AI博客</button>
+                <button onClick={() => onNavigate('community')} className={`text-lg font-semibold ${currentPage === 'community' ? 'text-brand-blue' : 'text-gray-600 hover:text-brand-blue'} transition`}>AI研讨社区</button>
             </div>
         </nav>
     </header>
 );
 
-const Sidebar = () => (
+const Sidebar = ({ activeFilters, onFilterChange, onClearFilters }) => (
     <aside className="w-64 flex-shrink-0">
         <div className="bg-white p-5 rounded-xl border border-gray-200">
             <div className="flex justify-between items-center mb-4">
@@ -152,19 +200,30 @@ const Sidebar = () => (
                     <FilterIcon />
                     <span>智能筛选</span>
                 </div>
-                <button className="text-sm px-3 py-1 bg-gray-100 rounded-md hover:bg-gray-200 transition">清除</button>
+                <button onClick={onClearFilters} className="text-sm px-3 py-1 bg-gray-100 rounded-md hover:bg-gray-200 transition">清除</button>
             </div>
             <div className="space-y-6">
                 {filtersData.map(filterGroup => (
                     <div key={filterGroup.title}>
                         <h3 className="text-sm font-semibold text-gray-600 mb-3">{filterGroup.title}</h3>
                         <ul className="space-y-2">
-                            {filterGroup.options.map(option => (
-                                <li key={option} className="flex items-center">
-                                    <input type={filterGroup.title === '论文来源' ? 'radio' : 'checkbox'} name={filterGroup.title} id={option} className="h-4 w-4 text-brand-blue border-gray-300 rounded focus:ring-brand-blue" />
-                                    <label htmlFor={option} className="ml-2 text-sm text-gray-700">{option}</label>
-                                </li>
-                            ))}
+                            {filterGroup.options.map(option => {
+                                const isChecked = activeFilters[filterGroup.title]?.includes(option) || false;
+                                return (
+                                    <li key={option} className="flex items-center">
+                                        <input 
+                                            type={filterGroup.type}
+                                            name={filterGroup.title} 
+                                            id={option} 
+                                            value={option}
+                                            checked={isChecked}
+                                            onChange={(e) => onFilterChange(filterGroup.title, option, e.target.checked)}
+                                            className="h-4 w-4 text-brand-blue border-gray-300 rounded focus:ring-brand-blue" 
+                                        />
+                                        <label htmlFor={option} className="ml-2 text-sm text-gray-700">{option}</label>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 ))}
@@ -257,29 +316,113 @@ const PaperCard = ({ paper, onSelectPaper }) => {
 };
 
 
-const PaperList = ({ onSelectPaper }) => (
+const PaperList = ({ papers, onSelectPaper }) => (
     <main className="flex-1">
         <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-800">论文数据库</h1>
-            <p className="text-gray-500">发现 <span className="text-brand-blue font-semibold">{papersData.length * 15 + 3}</span> 篇前沿沿论文</p>
+            <p className="text-gray-500">发现 <span className="text-brand-blue font-semibold">{papers.length}</span> 篇前沿沿论文</p>
         </div>
         <div className="space-y-6">
-            {papersData.map(paper => <PaperCard key={paper.id} paper={paper} onSelectPaper={onSelectPaper} />)}
+            {papers.length > 0 ? (
+                papers.map(paper => <PaperCard key={paper.id} paper={paper} onSelectPaper={onSelectPaper} />)
+            ) : (
+                <div className="flex flex-col items-center justify-center text-center p-10 bg-white rounded-xl border border-gray-200">
+                    <FileSadIcon />
+                    <h3 className="mt-4 text-xl font-bold text-gray-800">未找到匹配的论文</h3>
+                    <p className="mt-1 text-gray-500">请尝试调整或清除您的筛选条件。</p>
+                </div>
+            )}
         </div>
     </main>
 );
 
-const HomePage = ({ onSelectPaper }) => (
-    <div className="bg-gray-50 min-h-screen">
-        <Header />
-        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex flex-col lg:flex-row gap-8">
-                <Sidebar />
-                <PaperList onSelectPaper={onSelectPaper} />
+const HomePage = ({ onSelectPaper, onNavigate, currentPage }) => {
+    const [activeFilters, setActiveFilters] = React.useState({});
+
+    const handleFilterChange = (groupTitle, option, isChecked) => {
+        setActiveFilters(prevFilters => {
+            const newFilters = { ...prevFilters };
+            const currentGroupFilters = newFilters[groupTitle] ? [...newFilters[groupTitle]] : [];
+            const filterType = filtersData.find(f => f.title === groupTitle)?.type;
+
+            if (filterType === 'radio') {
+                 newFilters[groupTitle] = [option];
+            } else { // checkbox
+                if (isChecked) {
+                    if (!currentGroupFilters.includes(option)) {
+                        currentGroupFilters.push(option);
+                    }
+                } else {
+                    const index = currentGroupFilters.indexOf(option);
+                    if (index > -1) {
+                        currentGroupFilters.splice(index, 1);
+                    }
+                }
+                
+                if (currentGroupFilters.length > 0) {
+                    newFilters[groupTitle] = currentGroupFilters;
+                } else {
+                    delete newFilters[groupTitle];
+                }
+            }
+            return newFilters;
+        });
+    };
+
+    const handleClearFilters = () => {
+        setActiveFilters({});
+    };
+
+    const filteredPapers = React.useMemo(() => {
+        const filterKeys = Object.keys(activeFilters);
+        if (filterKeys.length === 0) {
+            return papersWithKeywords;
+        }
+        
+        const normalize = (str) => str.toLowerCase().replace(/[- ]/g, '');
+        
+        // Combine all checkbox filters into a single set for easier lookup
+        const keywordFilters = new Set(
+            [...(activeFilters['AI 标签'] || []), ...(activeFilters['AI 解读'] || [])].map(normalize)
+        );
+
+        return papersWithKeywords.filter(paper => {
+            // Check radio button filters (e.g., source)
+            const sourceFilter = activeFilters['论文来源'];
+            if (sourceFilter && !sourceFilter.includes(paper.source)) {
+                 return false;
+            }
+
+            // Check keyword-based filters
+            if (keywordFilters.size > 0) {
+                const paperKeywords = new Set(paper.keywords.map(kw => normalize(kw.text)));
+                const hasMatch = [...keywordFilters].some(filterKeyword => paperKeywords.has(filterKeyword));
+                if (!hasMatch) {
+                    return false;
+                }
+            }
+            
+            return true;
+        });
+
+    }, [activeFilters]);
+
+    return (
+        <div className="bg-gray-50 min-h-screen">
+            <Header onNavigate={onNavigate} currentPage={currentPage}/>
+            <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <Sidebar 
+                        activeFilters={activeFilters}
+                        onFilterChange={handleFilterChange}
+                        onClearFilters={handleClearFilters}
+                    />
+                    <PaperList papers={filteredPapers} onSelectPaper={onSelectPaper} />
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const PDFViewer = () => {
     const pdfUrl = 'https://arxiv.org/pdf/2509.08721v1';
@@ -524,10 +667,90 @@ const PaperDetailView = ({ paper, onBack }) => (
     </div>
 );
 
+const CommunityPage = ({ onNavigate, currentPage }) => {
+    const [activeCategory, setActiveCategory] = React.useState('所有文章');
+    
+    return (
+        <div className="bg-white min-h-screen">
+            <Header onNavigate={onNavigate} currentPage={currentPage} />
+            <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-4xl font-black text-gray-900">帖子、文章和讨论</h1>
+                     <div className="flex items-center space-x-4">
+                        <button className="flex items-center space-x-2 bg-blue-50 text-brand-blue px-4 py-2 rounded-lg font-semibold hover:bg-blue-100 transition border border-gray-200">
+                            <NewArticleIcon />
+                            <span>New Article</span>
+                        </button>
+                        <button className="p-3 rounded-full border border-gray-300 hover:bg-gray-100 transition">
+                            <SearchIcon />
+                        </button>
+                    </div>
+                </div>
+
+                <div className="flex items-center space-x-2 border-b border-gray-200 mb-6 overflow-x-auto pb-2">
+                    {communityCategories.map(category => (
+                        <button 
+                            key={category}
+                            onClick={() => setActiveCategory(category)}
+                            className={`px-4 py-2 rounded-md text-sm font-semibold whitespace-nowrap transition ${
+                                activeCategory === category 
+                                ? 'bg-gray-900 text-white' 
+                                : 'text-gray-600 hover:bg-gray-100'
+                            }`}
+                        >
+                            {category}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="mt-8">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-bold text-gray-800">👋 Community Articles</h3>
+                         <button className="flex items-center space-x-2 text-sm text-gray-600 px-3 py-1.5 border border-gray-300 rounded-md hover:bg-gray-100 transition">
+                            <SortIcon />
+                            <span>Sort: Trending</span>
+                        </button>
+                    </div>
+                    <div className="space-y-4">
+                       {communityArticlesData.map(article => (
+                           <div key={article.id} className="p-4 rounded-lg border border-gray-200 bg-gray-50/50">
+                               <h4 className="font-semibold text-gray-800 hover:text-brand-blue transition cursor-pointer">{article.title}</h4>
+                               <div className="text-xs text-gray-500 mt-2 flex items-center space-x-2">
+                                   <span>By {article.author}</span>
+                                   <span>•</span>
+                                   <span>{article.time}</span>
+                                   <span>•</span>
+                                   <span className="flex items-center space-x-1">
+                                       <UpvoteIcon />
+                                       <span>{article.upvotes}</span>
+                                   </span>
+                               </div>
+                           </div>
+                       ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const UnderDevelopmentPage = ({ onNavigate, currentPage, featureName }) => (
+    <div className="bg-gray-50 min-h-screen">
+        <Header onNavigate={onNavigate} currentPage={currentPage} />
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center" style={{ minHeight: 'calc(100vh - 64px)'}}>
+            <div className="text-center">
+                <WrenchScrewdriverIcon />
+                <h1 className="text-2xl font-bold text-gray-800 mt-6">该“{featureName}”功能正在开发中</h1>
+                <p className="text-gray-500 mt-2">我们正在努力构建中，敬请期待！</p>
+            </div>
+        </div>
+    </div>
+);
 
 // --- Main App Component ---
 
 const App = () => {
+    const [currentPage, setCurrentPage] = React.useState('home');
     const [selectedPaper, setSelectedPaper] = React.useState(null);
 
     const handleSelectPaper = (paper) => {
@@ -538,11 +761,36 @@ const App = () => {
         setSelectedPaper(null);
     };
 
+    const handleNavigate = (page) => {
+        setSelectedPaper(null);
+        setCurrentPage(page);
+    };
+
     if (selectedPaper) {
         return <PaperDetailView paper={selectedPaper} onBack={handleBack} />;
     }
 
-    return <HomePage onSelectPaper={handleSelectPaper} />;
+    if (currentPage === 'research') {
+        return <UnderDevelopmentPage onNavigate={handleNavigate} currentPage={currentPage} featureName="AI深度研究" />;
+    }
+
+    if (currentPage === 'search') {
+        return <UnderDevelopmentPage onNavigate={handleNavigate} currentPage={currentPage} featureName="智能搜索" />;
+    }
+
+    if (currentPage === 'knowledge-graph') {
+        return <UnderDevelopmentPage onNavigate={handleNavigate} currentPage={currentPage} featureName="AI知识图谱" />;
+    }
+
+    if (currentPage === 'blog') {
+        return <UnderDevelopmentPage onNavigate={handleNavigate} currentPage={currentPage} featureName="论文AI博客" />;
+    }
+
+    if (currentPage === 'community') {
+        return <CommunityPage onNavigate={handleNavigate} currentPage={currentPage} />;
+    }
+
+    return <HomePage onSelectPaper={handleSelectPaper} onNavigate={handleNavigate} currentPage={currentPage} />;
 };
 
 // --- Render Logic ---
